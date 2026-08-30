@@ -4,6 +4,10 @@
 
 它先识别职责重复，再用“删除后会发生什么”检验一个实体是否真正改变用户或 Agent 的可观察行为，最后结合 SoT、Projection 和维护机制决定删除、归档、合并、告警或保留。
 
+<p align="center">
+  <img src="assets/da-sao-chu-poster-1980s.webp" alt="1980 年代校园宣传画风格的小学生集体大扫除海报" width="960" />
+</p>
+
 ## 适用工具
 
 - OpenAI Codex
