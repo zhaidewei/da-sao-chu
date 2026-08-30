@@ -6,6 +6,8 @@
 
 <p align="center">
   <img src="assets/da-sao-chu-poster-1980s.webp" alt="1980 年代校园宣传画风格的小学生集体大扫除海报" width="960" />
+  <br />
+  <sub><em>Da sao chu</em> (大扫除, literally “big cleaning”) is a familiar Chinese practice of doing a thorough, collective clean-up—at home, at school, or before a fresh start—to clear away clutter, reset a shared space, and begin again with intention.</sub>
 </p>
 
 ## 适用工具
