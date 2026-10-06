@@ -1,54 +1,54 @@
-# 责任原子
+# Responsibility Atom
 
-责任原子（Responsibility Atom）是一个能够被独立判断价值的最小责任单元。
+A responsibility atom is the smallest unit of responsibility whose value can be assessed independently.
 
-它描述对象对外承担的行为承诺。物理结构不决定责任边界：一个文件可以包含多个责任原子，多个文件也可以共同实现一个责任原子。
+It describes an object's externally observable behavioral commitments. Physical structure does not determine responsibility boundaries: one file can contain several atoms, and several files can jointly implement one atom.
 
-## 目标
+## Goal
 
-输出一个不重不漏的拆分方案：原对象范围内的每项行为、契约和保留义务都归属且只归属一个责任原子，每个原子都能独立判断价值、独立处置并独立验证。
+Produce a complete, non-overlapping decomposition. Every behavior, contract, and retention obligation within the original object's scope must belong to exactly one atom. Each atom must support independent value assessment, disposition, and verification.
 
-拆分和归并是形成方案的过程动作。无法独立处置的候选项不能出现在最终方案中。
+Splitting and grouping are steps toward that decomposition. Candidates that cannot be acted on independently must not appear in the final plan.
 
-## 判定
+## Decision process
 
 ```mermaid
 flowchart TD
-    A["界定原对象、行为和证据边界"] --> B{"证据足够？"}
-    B -- "否" --> H["HOLD：记录未知项和补证动作"]
-    B -- "是" --> C["提出候选责任划分"]
-    C --> D{"每个候选都能独立处置并验证？"}
-    D -- "否：内部结论不同" --> S["继续拆分"]
-    D -- "否：只能共同产生价值" --> M["归并到共同责任"]
+    A["Define the original object, behavior, and evidence boundary"] --> B{"Enough evidence?"}
+    B -- "No" --> H["HOLD: record unknowns and evidence-gathering actions"]
+    B -- "Yes" --> C["Propose candidate responsibility boundaries"]
+    C --> D{"Can each candidate be acted on and verified independently?"}
+    D -- "No: internal parts need different outcomes" --> S["Split further"]
+    D -- "No: value is only produced jointly" --> M["Group under a shared responsibility"]
     S --> C
     M --> C
-    D -- "是" --> E{"候选之间有职责重叠？"}
-    E -- "是" --> R["重划边界，消除重复归属"]
+    D -- "Yes" --> E{"Do candidates overlap in responsibility?"}
+    E -- "Yes" --> R["Redraw boundaries to remove duplicate ownership"]
     R --> C
-    E -- "否" --> F{"原对象内有行为、契约或义务未归属？"}
-    F -- "是" --> L["补齐遗漏并重新划分"]
+    E -- "No" --> F{"Any unassigned behavior, contract, or obligation?"}
+    F -- "Yes" --> L["Account for omissions and revise the boundaries"]
     L --> C
-    F -- "否" --> K["输出责任原子拆分方案"]
+    F -- "No" --> K["Return the responsibility atom decomposition"]
 ```
 
-## 最终输出
+## Final output
 
-- **拆分方案**：只包含已成立的责任原子，并证明它们不重不漏。
-- **HOLD**：证据不足，无法形成可靠方案；列出未知项和补证动作。
+- **Decomposition:** include only established responsibility atoms and demonstrate complete coverage with no overlap.
+- **HOLD:** evidence is insufficient for a reliable decomposition; list the unknowns and the actions needed to obtain evidence.
 
-拆分方案中的每个责任原子必须包含：责任名称、可观察结果、消费者、触发、输入契约、产物语义、Authority、权限、生命周期、处置边界和独立验证方法。
+Each atom must specify its responsibility name, observable outcome, consumers, triggers, input contract, output semantics, authoritative source, permissions, lifecycle, disposition boundary, and independent verification method.
 
-方案还必须包含两张映射：
+The plan must also include two mappings:
 
-1. **覆盖映射**：原对象内每项行为、契约和保留义务分别归属哪个责任原子，用于证明没有遗漏。
-2. **边界映射**：每对容易混淆的责任原子分别拥有和明确不拥有的内容，用于证明没有重叠。
+1. **Coverage map:** assign every behavior, contract, and retention obligation in the original object to an atom, demonstrating that nothing is missing.
+2. **Boundary map:** for each pair of easily confused atoms, specify what each owns and explicitly excludes, demonstrating that responsibilities do not overlap.
 
-只要仍有重叠、遗漏或无法独立处置的候选项，就继续重划边界；证据不足时输出 HOLD。
+Keep revising the boundaries while candidates overlap, omit responsibilities, or cannot be acted on independently. Return `HOLD` when evidence is insufficient.
 
-## 尺度原则
+## Choosing the scale
 
-一起产生价值、一起退役、一起验证的内容属于同一个责任原子；可能获得不同处置结论的内容属于不同责任原子。所有实现细节也必须归属于且只归属于一个原子，不能作为游离项进入最终方案。
+Parts that produce value, retire, and undergo verification together belong to one atom. Parts that may receive different disposition outcomes belong to different atoms. Every implementation detail must also belong to exactly one atom; no unassigned details may appear in the final plan.
 
-责任原子过大时，整体结论会掩盖内部差异。责任原子过小时，它只是实现细节，无法独立产生价值、处置或验证。证据不足时使用 HOLD，不为获得整齐结构而强行拆分。
+An atom that is too large hides internal differences behind an overall conclusion. An atom that is too small is merely an implementation detail and cannot independently provide value, be acted on, or be verified. Use `HOLD` when evidence is insufficient; avoid forcing a decomposition just to produce a tidy structure.
 
-“责任原子”是操作性定义，建立在单一职责、高内聚低耦合和 Bounded Context 等思想之上，不是既有学术或行业标准术语。它只确定判断对象的语义尺度，不替代后续的价值判断、处置授权和结果验证。
+“Responsibility atom” is an operational definition informed by single responsibility, high cohesion, low coupling, and bounded contexts. It is not an established academic or industry-standard term. It sets the semantic scale of the object being assessed; subsequent value assessment, authorization, and result verification remain separate steps.

@@ -1,33 +1,35 @@
 ---
 name: da-sao-chu
-description: "审计和清理代码、模块、文件、文档或机制：用删除反事实、使用证据、SoT/Projection 角色与维护机制判断删除、归档、合并、修复或保留；证据不足或缺少删除授权时暂停。用于用户要求大扫除、清理、瘦身或资产审计时。"
+description: "Audit and clean up code, modules, files, documents, or mechanisms. Use removal impact, usage evidence, source-of-truth and projection roles, and maintenance mechanisms to recommend deletion, archiving, merging, repair, or retention. Pause the affected action when evidence or deletion authority is missing. Use when the user requests cleanup, reduction, or an asset audit."
 ---
 
-## 准备
+## Preparation
 
-复杂目标先读取 [`责任原子`](references/responsibility-atom.md)，形成不重不漏、可独立处置和验证的责任原子拆分方案。只让方案中的每个责任原子分别经过下面的决策树；`HOLD` 尚未形成可处置对象。
+For a complex target, first read [Responsibility Atom](references/responsibility-atom.md) and produce a complete, non-overlapping decomposition into responsibility atoms that can be acted on and verified independently. Pass each established atom through the decision tree below. A `HOLD` outcome has not yet established an actionable unit.
 
-## 决策树
+## Decision tree
 
 ```mermaid
 flowchart TD
-    A["界定目标并只读盘点"] --> B{"证据足够？"}
-    B -- "否" --> P["暂停：补齐证据"]
-    B -- "是" --> C{"删除会让用户或 Agent 的行为变差？"}
-    C -- "无法判断" --> P
-    C -- "否" --> D{"有保留义务？"}
-    D -- "是" --> R["归档"]
-    D -- "否" --> G{"已获授权且可以恢复？"}
-    C -- "是" --> E{"现有能力可以等价替代？"}
-    E -- "是" --> M["合入 canonical home 并验证替代路径"]
+    A["Define the target and inventory it read-only"] --> B{"Enough evidence?"}
+    B -- "No" --> P["Pause: obtain missing evidence or authorization"]
+    B -- "Yes" --> C{"Would removal worsen user or agent behavior?"}
+    C -- "Unknown" --> P
+    C -- "No" --> D{"Retention obligations?"}
+    D -- "Yes" --> R["Archive"]
+    D -- "No" --> G{"Authorized and recoverable?"}
+    C -- "Yes" --> E{"Equivalent existing replacement?"}
+    E -- "Yes" --> M["Merge into the authoritative home and verify the replacement path"]
     M --> G
-    E -- "否" --> F{"维护机制可靠？"}
-    F -- "是" --> K["保留"]
-    F -- "否" --> N["修复或替换"]
-    G -- "否" --> P
-    G -- "是" --> X["删除并验证影响边界"]
+    E -- "No" --> F{"Reliable maintenance mechanism?"}
+    F -- "Yes" --> K["Keep"]
+    F -- "No" --> N["Repair or replace"]
+    G -- "No" --> P
+    G -- "Yes" --> X["Delete and verify the impact boundary"]
 ```
 
-未知用户、动态调用、权限不足或缺失证据都不等于未使用。先做只读盘点；涉及删除、覆盖、远程状态或不可逆变更时，必须取得与目标和范围匹配的明确授权。执行删除前确认恢复方式、保留义务和影响边界，删除后验证预期消费者行为，并报告仍无法证明的部分。
+## Safety
 
-同类项按职责和行为判定，不按名字或表面结构判定。只有在用户、触发时机、输入契约和产物语义兼容时才合并；区域、生命周期或权限边界不同且具有独立语义的实体应保留分离。合并时先选择一个权威归属，迁入各实现仍被使用的独特价值，再删除其余重复内容和并行维护机制；不得以抽象化为由保留仅做转发、复述或同步复制的中间层。
+Missing usage evidence does not prove that something is unused. Pause when evidence is insufficient. This skill produces a disposition plan; deletion, overwriting, or merging requires user authorization for the specific target, followed by impact verification. Before executing a change, confirm the recovery method, retention obligations, and impact boundary. The tree's archive and merge nodes are recommendations until these conditions are met.
+
+An equivalent replacement must preserve compatibility for consumers, triggers, input contracts, and output semantics. Before merging, migrate any unique value that is still in use.
