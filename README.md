@@ -1,65 +1,69 @@
-# 大扫除（da-sao-chu）
+# Da Sao Chu (大扫除)
 
-一个帮助 AI Agent 判断代码、模块、文件、文档和机制该如何处置的 Skill。
+[English](README.md) | [简体中文](README.zh-CN.md)
+
+A skill that helps AI agents decide what to do with code, modules, files, documents, and mechanisms.
 
 <p align="center">
-  <img src="assets/da-sao-chu-poster-1980s.webp" alt="1980 年代校园宣传画风格的小学生集体大扫除海报" width="960" />
+  <img src="assets/da-sao-chu-poster-1980s.webp" alt="Schoolchildren cleaning together in the style of a 1980s Chinese school poster" width="960" />
   <br />
   <sub><em>Da sao chu</em> (大扫除, literally “big cleaning”) is a familiar Chinese practice of doing a thorough, collective clean-up—at home, at school, or before a fresh start—to clear away clutter, reset a shared space, and begin again with intention.</sub>
 </p>
 
-## 问题 / 麻烦
+## The problem
 
-AI Agent 让创建变得很便宜，也让代码库更容易积累东西：
+AI agents make creation cheap. Repositories can quickly accumulate:
 
-- 同一职责被多个模块、文档或机制重复承担。
-- 权威来源旁边长期保留手工副本、转发层和同步机制。
-- 隐藏消费者、历史证据和保留义务让团队不敢删除。
+- Modules, documents, and mechanisms that duplicate the same responsibility.
+- Manual copies, forwarding layers, and synchronization mechanisms alongside authoritative sources.
+- Hidden consumers, historical evidence, and retention obligations that make deletion difficult to assess.
 
-结果是维护路径持续增加，Agent 和人都更难判断什么仍有价值。
+Each addition creates another maintenance path. People and agents have a harder time deciding what still provides value.
 
-## 根因
+## Why it happens
 
-- **使用证据分散：** 调用者、触发时机、输入契约、产物和保留义务缺少统一视图。
-- **判断标准失焦：** 文件名和目录结构被当成重复证据，职责与可观察行为反而没有验证。
-- **权威归属不清：** SoT、Projection 和 Adapter 混在一起，每份副本都像“不能删”。
-- **缺少删除反事实：** 很少有人追问“删掉它后，用户或 Agent 的行为会不会变差？”
+- **Scattered usage evidence:** consumers, triggers, input contracts, outputs, and retention obligations lack a shared view.
+- **Weak criteria for duplication:** filenames and directory layouts stand in for verified responsibilities and observable behavior.
+- **Unclear authority:** sources of truth, projections, and adapters are mixed together, making every copy seem essential.
+- **Missing deletion impact analysis:** few reviews ask, “Would removing this make things worse for a user or agent?”
 
-## 对策
+## The approach
 
-`da-sao-chu` 把清理变成一套可审计的决策过程：
+`da-sao-chu` turns cleanup into an auditable decision process:
 
-1. 按 [`责任原子`](skills/da-sao-chu/references/responsibility-atom.md) 将复杂目标拆成不重不漏、可独立处置和验证的责任单元。
-2. 界定每个责任原子的权限和影响边界。
-3. 只读盘点职责、消费者、触发、依赖、产物和保留义务。
-4. 用职责、行为和删除反事实判断真实价值。
-5. 识别 canonical home，给出删除、归档、合并、修复、保留或暂停结论。
-6. 获得授权并确认恢复方案后执行，随后验证消费者行为。
+1. Break complex targets into [responsibility atoms](skills/da-sao-chu/references/responsibility-atom.md): complete, non-overlapping units that can be assessed, acted on, and verified independently.
+2. Define the permissions and impact boundary for each atom.
+3. Inventory responsibilities, consumers, triggers, dependencies, outputs, and retention obligations using read-only checks.
+4. Assess value through responsibilities, behavior, and the consequences of removal.
+5. Identify the authoritative home and recommend deletion, archiving, merging, repair, retention, or a pause.
+6. Obtain authorization for the specific action, confirm recovery, execute, and verify consumer behavior.
 
-核心安全原则：**未知不等于未使用。** 证据不足、权限不足或不可逆风险尚未解决时，应当暂停并等待证据补齐。
+Core safety principle: **unknown usage does not mean unused.** Pause when evidence or permissions are insufficient, or unresolved irreversible risks remain.
 
-## 决策树
+## Decision tree
 
 ```mermaid
 flowchart TD
-    A["界定目标并只读盘点"] --> B{"证据足够？"}
-    B -- "否" --> P["暂停：补齐证据"]
-    B -- "是" --> C{"删除会让用户或 Agent 的行为变差？"}
-    C -- "无法判断" --> P
-    C -- "否" --> D{"有保留义务？"}
-    D -- "是" --> R["归档"]
-    D -- "否" --> G{"已获授权且可以恢复？"}
-    C -- "是" --> E{"现有能力可以等价替代？"}
-    E -- "是" --> M["合入 canonical home 并验证替代路径"]
+    A["Define the target and inventory it read-only"] --> B{"Enough evidence?"}
+    B -- "No" --> P["Pause: obtain missing evidence or authorization"]
+    B -- "Yes" --> C{"Would removal worsen user or agent behavior?"}
+    C -- "Unknown" --> P
+    C -- "No" --> D{"Retention obligations?"}
+    D -- "Yes" --> R["Archive"]
+    D -- "No" --> G{"Authorized and recoverable?"}
+    C -- "Yes" --> E{"Equivalent existing replacement?"}
+    E -- "Yes" --> M["Merge into the authoritative home and verify the replacement path"]
     M --> G
-    E -- "否" --> F{"维护机制可靠？"}
-    F -- "是" --> K["保留"]
-    F -- "否" --> N["修复或替换"]
-    G -- "否" --> P
-    G -- "是" --> X["删除并验证影响边界"]
+    E -- "No" --> F{"Reliable maintenance mechanism?"}
+    F -- "Yes" --> K["Keep"]
+    F -- "No" --> N["Repair or replace"]
+    G -- "No" --> P
+    G -- "Yes" --> X["Delete and verify the impact boundary"]
 ```
 
-## 安装
+The tree guides the recommendation. Its merge and archive nodes remain subject to authorization and recovery checks before execution.
+
+## Installation
 
 ```bash
 git clone https://github.com/zhaidewei/da-sao-chu.git
@@ -67,22 +71,22 @@ cd da-sao-chu
 ./scripts/install.sh both
 ```
 
-将 `both` 换成 `codex` 或 `claude` 可以只安装到一个工具。脚本不会覆盖既有安装。
+Replace `both` with `codex` or `claude` to install for one tool. The script refuses to overwrite an existing installation.
 
-### 在 Codex 中通过 Skill Installer 安装
-
-```text
-使用 $skill-installer 从 zhaidewei/da-sao-chu 的 skills/da-sao-chu 安装
-```
-
-## 使用
+### Install through the Codex Skill Installer
 
 ```text
-用 $da-sao-chu 检查这个模块是否值得保留。
-/da-sao-chu 清理这套重复的配置机制
+Use $skill-installer to install skills/da-sao-chu from zhaidewei/da-sao-chu.
 ```
 
-完整规则见 [`skills/da-sao-chu/SKILL.md`](skills/da-sao-chu/SKILL.md)。
+## Usage
+
+```text
+Use $da-sao-chu to assess whether this module is worth keeping.
+/da-sao-chu Review this duplicated configuration mechanism and propose a cleanup plan.
+```
+
+See [`skills/da-sao-chu/SKILL.md`](skills/da-sao-chu/SKILL.md) for the full instructions. The skill and its bundled reference are in English.
 
 ## License
 
