@@ -40,28 +40,28 @@ Each addition creates another maintenance path. People and agents have a harder 
 
 Core safety principle: **unknown usage does not mean unused.** Pause when evidence or permissions are insufficient, or unresolved irreversible risks remain.
 
-## Decision tree
+## Cleanup workflow
 
 ```mermaid
 flowchart TD
-    A["Define the target and inventory it read-only"] --> B{"Enough evidence?"}
-    B -- "No" --> P["Pause: obtain missing evidence or authorization"]
+    A["Define the scope and inventory it read-only"] --> B{"Enough evidence to judge removal impact?"}
+    B -- "No" --> H["HOLD the affected item and record what is missing"]
     B -- "Yes" --> C{"Would removal worsen user or agent behavior?"}
-    C -- "Unknown" --> P
-    C -- "No" --> D{"Retention obligations?"}
-    D -- "Yes" --> R["Archive"]
-    D -- "No" --> G{"Authorized and recoverable?"}
-    C -- "Yes" --> E{"Equivalent existing replacement?"}
-    E -- "Yes" --> M["Merge into the authoritative home and verify the replacement path"]
-    M --> G
+    C -- "No" --> D{"Retention obligation?"}
+    D -- "Yes" --> R["Recommend archiving"]
+    D -- "No" --> X["Recommend deletion"]
+    C -- "Yes" --> E{"Compatible existing replacement?"}
+    E -- "Yes" --> M["Recommend merging into the authoritative home"]
     E -- "No" --> F{"Reliable maintenance mechanism?"}
-    F -- "Yes" --> K["Keep"]
-    F -- "No" --> N["Repair or replace"]
-    G -- "No" --> P
-    G -- "Yes" --> X["Delete and verify the impact boundary"]
+    F -- "Yes" --> K["Recommend keeping"]
+    F -- "No" --> N["Recommend repair or replacement"]
+    H & R & X & M & K & N --> P["Report the disposition plan"]
+    P --> G{"Is there a proposed change in scope with authorization and execution checks satisfied?"}
+    G -- "No" --> W["Stop at the plan for this item"]
+    G -- "Yes" --> V["Perform the authorized change and verify its impact"]
 ```
 
-The tree guides the recommendation. Its merge and archive nodes remain subject to authorization and recovery checks before execution.
+Assess each unit independently. For a review-only request, stop at the disposition plan. Before executing a change, confirm authorization for the action and target, the recovery method, retention obligations, and the impact boundary.
 
 ## Installation
 

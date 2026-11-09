@@ -5,31 +5,57 @@ description: "Audit and clean up code, modules, files, documents, or mechanisms.
 
 ## Preparation
 
-For a complex target, first read [Responsibility Atom](references/responsibility-atom.md) and produce a complete, non-overlapping decomposition into responsibility atoms that can be acted on and verified independently. Pass each established atom through the decision tree below. A `HOLD` outcome has not yet established an actionable unit.
+For a complex target, first read [Responsibility Atom](references/responsibility-atom.md) and produce a complete, non-overlapping decomposition into responsibility atoms that can be acted on and verified independently. Assess each established atom using the activity diagram below. Record unresolved boundaries as `HOLD`.
 
-## Decision tree
+## Activity diagram
 
-```mermaid
-flowchart TD
-    A["Define the target and inventory it read-only"] --> B{"Enough evidence?"}
-    B -- "No" --> P["Pause: obtain missing evidence or authorization"]
-    B -- "Yes" --> C{"Would removal worsen user or agent behavior?"}
-    C -- "Unknown" --> P
-    C -- "No" --> D{"Retention obligations?"}
-    D -- "Yes" --> R["Archive"]
-    D -- "No" --> G{"Authorized and recoverable?"}
-    C -- "Yes" --> E{"Equivalent existing replacement?"}
-    E -- "Yes" --> M["Merge into the authoritative home and verify the replacement path"]
-    M --> G
-    E -- "No" --> F{"Reliable maintenance mechanism?"}
-    F -- "Yes" --> K["Keep"]
-    F -- "No" --> N["Repair or replace"]
-    G -- "No" --> P
-    G -- "Yes" --> X["Delete and verify the impact boundary"]
+```plantuml
+@startuml
+start
+:Define the scope and inventory responsibilities, consumers, triggers,\ndependencies, outputs, and retention obligations read-only;
+if (Complex target?) then (yes)
+  :Establish independently actionable and verifiable responsibility atoms;
+  :Record any unresolved boundaries as HOLD;
+else (no)
+  :Assess the target as one unit;
+endif
+while (Another established unit?) is (yes)
+  if (Enough evidence to judge removal impact?) then (yes)
+    if (Would removal worsen user or agent behavior?) then (yes)
+      if (Compatible existing replacement?) then (yes)
+        :Recommend merging into the authoritative home;
+      elseif (Reliable maintenance mechanism?) then (yes)
+        :Recommend keeping;
+      else (no)
+        :Recommend repair or replacement;
+      endif
+    elseif (Retention obligation?) then (yes)
+      :Recommend archiving;
+    else (no)
+      :Recommend deletion;
+    endif
+  else (no)
+    :Record HOLD for the affected unit and identify missing evidence;
+  endif
+endwhile (no)
+:Report the disposition plan;
+
+while (Another proposed change within the requested scope?) is (yes)
+  if (Specific authorization and execution checks satisfied?) then (yes)
+    :Perform the authorized change;
+    :Verify the impact on affected consumers and report the result;
+  else (no)
+    :Leave the change pending and record the unmet conditions;
+  endif
+endwhile (no)
+stop
+@enduml
 ```
 
-## Safety
+## Execution checks
 
-Missing usage evidence does not prove that something is unused. Pause when evidence is insufficient. This skill produces a disposition plan; deletion, overwriting, or merging requires user authorization for the specific target, followed by impact verification. Before executing a change, confirm the recovery method, retention obligations, and impact boundary. The tree's archive and merge nodes are recommendations until these conditions are met.
+Missing usage evidence does not prove that an item is unused. If a condition needed for a disposition is unresolved, record `HOLD` for the affected unit and continue assessing independent units.
 
-An equivalent replacement must preserve compatibility for consumers, triggers, input contracts, and output semantics. Before merging, migrate any unique value that is still in use.
+For a review-only request, stop after reporting the plan. Before changing anything, confirm that the user's authorization covers the specific action and target, and verify the recovery method, retention obligations, and impact boundary.
+
+An equivalent replacement must preserve compatibility for consumers, triggers, input contracts, and output semantics. For an authorized merge, migrate any unique value still in use and verify the replacement path before removing redundant material covered by the authorization.

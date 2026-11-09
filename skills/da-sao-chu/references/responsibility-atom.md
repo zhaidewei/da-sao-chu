@@ -12,33 +12,41 @@ Splitting and grouping are steps toward that decomposition. Candidates that cann
 
 ## Decision process
 
-```mermaid
-flowchart TD
-    A["Define the original object, behavior, and evidence boundary"] --> B{"Enough evidence?"}
-    B -- "No" --> H["HOLD: record unknowns and evidence-gathering actions"]
-    B -- "Yes" --> C["Propose candidate responsibility boundaries"]
-    C --> D{"Can each candidate be acted on and verified independently?"}
-    D -- "No: internal parts need different outcomes" --> S["Split further"]
-    D -- "No: value is only produced jointly" --> M["Group under a shared responsibility"]
-    S --> C
-    M --> C
-    D -- "Yes" --> E{"Do candidates overlap in responsibility?"}
-    E -- "Yes" --> R["Redraw boundaries to remove duplicate ownership"]
-    R --> C
-    E -- "No" --> F{"Any unassigned behavior, contract, or obligation?"}
-    F -- "Yes" --> L["Account for omissions and revise the boundaries"]
-    L --> C
-    F -- "No" --> K["Return the responsibility atom decomposition"]
+```plantuml
+@startuml
+start
+:Define the original object, behavior, and evidence boundary;
+while (Enough evidence?) is (yes)
+  :Propose candidate responsibility boundaries;
+  if (Can each candidate be acted on and verified independently?) then (no)
+    if (Do internal parts need different outcomes?) then (yes)
+      :Split further;
+    else (value is produced jointly)
+      :Group under a shared responsibility;
+    endif
+  elseif (Do candidates overlap in responsibility?) then (yes)
+    :Redraw boundaries to remove duplicate ownership;
+  elseif (Any unassigned behavior, contract, or obligation?) then (yes)
+    :Account for omissions and revise the boundaries;
+  else (no)
+    :Return the responsibility atom decomposition;
+    stop
+  endif
+endwhile (no)
+:Record HOLD, the unknowns, and evidence-gathering actions;
+:Return any established atoms proven independent of the unresolved boundaries;
+stop
+@enduml
 ```
 
 ## Final output
 
 - **Decomposition:** include only established responsibility atoms and demonstrate complete coverage with no overlap.
-- **HOLD:** evidence is insufficient for a reliable decomposition; list the unknowns and the actions needed to obtain evidence.
+- **HOLD:** evidence is insufficient for a complete decomposition. List the unknowns and the actions needed to obtain evidence. Return any established atoms proven independent of the unresolved boundaries so they can be assessed separately. The overall decomposition stays on `HOLD`.
 
 Each atom must specify its responsibility name, observable outcome, consumers, triggers, input contract, output semantics, authoritative source, permissions, lifecycle, disposition boundary, and independent verification method.
 
-The plan must also include two mappings:
+A complete decomposition must also include two mappings:
 
 1. **Coverage map:** assign every behavior, contract, and retention obligation in the original object to an atom, demonstrating that nothing is missing.
 2. **Boundary map:** for each pair of easily confused atoms, specify what each owns and explicitly excludes, demonstrating that responsibilities do not overlap.
